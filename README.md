@@ -2,7 +2,7 @@
 
 This project is being created with ReactJS, Zustand and Typescript
 
-## Demo - 1
+## Demo (1)
 
 ![Demo](./demo/demo.gif)
 
