@@ -7,7 +7,7 @@ import {
   playerBackgroundPosition,
 } from "../../utils/helpers/handleSizes";
 
-type Props = {
+type AnimationProps = {
   animationPath: string;
   positionX: number;
   positionY: number;
@@ -24,11 +24,11 @@ export const walking = keyframes`
   }
 `;
 
-const getDirection = ({ direction }: Props) => {
+const getDirection = ({ direction }: AnimationProps) => {
   return direction === DIRECTION.RIGHT ? 1 : -1;
 };
 
-export const Animation = styled.div<Props>`
+export const Animation = styled.div<AnimationProps>`
   position: absolute;
   left: ${({ positionX }) => positionX * SIZES.TILE}px;
   bottom: ${({ positionY }) => positionY * SIZES.TILE}px;
@@ -41,4 +41,6 @@ export const Animation = styled.div<Props>`
   animation: ${walking} 1s steps(4) infinite;
   background-image: ${({ animationPath }) => animationPath};
   transform: scaleX(${(props) => getDirection(props)});
+
+  z-index: 1;
 `;
