@@ -4,6 +4,8 @@ import { SIZES } from "../../utils/enums";
 
 type AnimationProps = {
   animationPath: string;
+  positionX: number;
+  positionY: number;
 };
 
 export const chestOpening = keyframes`
@@ -18,8 +20,8 @@ export const chestOpening = keyframes`
 
 export const Animation = styled.div<AnimationProps>`
   position: absolute;
-  bottom: ${SIZES.TILE * 5}px;
-  left: ${SIZES.TILE * 5}px;
+  top: ${({ positionY }) => SIZES.TILE * positionY}px;
+  left: ${({ positionX }) => SIZES.TILE * positionX}px;
 
   height: ${SIZES.CHEST}px;
   width: ${SIZES.CHEST}px;

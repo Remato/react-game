@@ -26,7 +26,7 @@ const getDirection = ({ direction }: AnimationProps) => {
 export const Animation = styled.div<AnimationProps>`
   position: absolute;
   left: ${({ positionX }) => positionX * SIZES.TILE}px;
-  bottom: ${({ positionY }) => positionY * SIZES.TILE}px;
+  top: ${({ positionY }) => positionY * SIZES.TILE}px;
 
   width: ${SIZES.DEMON_TILE}px;
   height: ${SIZES.DEMON_TILE}px;

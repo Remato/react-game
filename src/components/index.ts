@@ -5,3 +5,4 @@ export { default as Demon } from "./Demon";
 export { default as Chest } from "./Chest";
 export { default as Trap } from "./Trap";
 export { default as Debugger } from "./Debugger";
+export { default as Tile } from "./Tile";

@@ -1,7 +1,17 @@
 import { Animation } from "./styles";
 
-function Chest() {
-  return <Animation animationPath="url(./assets/CHEST.png)" />;
+type Props = {
+  initialPosition: Position;
+};
+
+function Chest({ initialPosition }: Props) {
+  return (
+    <Animation
+      animationPath="url(./assets/CHEST.png)"
+      positionX={initialPosition.x}
+      positionY={initialPosition.y}
+    />
+  );
 }
 
 export default Chest;

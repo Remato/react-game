@@ -4,6 +4,8 @@ import { SIZES } from "../../utils/enums";
 
 type AnimationProps = {
   animationPath: string;
+  positionX: number;
+  positionY: number;
 };
 
 export const trapArising = keyframes`
@@ -18,10 +20,10 @@ export const trapArising = keyframes`
 
 export const Animation = styled.div<AnimationProps>`
   position: absolute;
-  bottom: ${SIZES.TILE * 2}px;
-  left: ${SIZES.TILE * 8}px;
+  top: ${({ positionY }) => SIZES.TRAP * positionY}px;
+  left: ${({ positionX }) => SIZES.TRAP * positionX}px;
 
-  height: 100px;
+  height: ${SIZES.TRAP}px;
   width: ${SIZES.TRAP}px;
 
   background-repeat: no-repeat;
