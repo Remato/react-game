@@ -23,7 +23,7 @@ function useEnemyMovement(initialPosition: Position) {
     if (validations.dead) {
       setTimeout(() => {
         alert("YOU DIED BY ENEMY!");
-      });
+      }, 100);
       window.location.reload();
     }
 
