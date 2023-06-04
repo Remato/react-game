@@ -10,7 +10,7 @@ export const Scoreboard = styled.div`
   color: #fff;
   font-weight: bold;
   text-transform: uppercase;
-  z-index: 3;
+  z-index: 4;
 `;
 
 export const DebugButton = styled.div`
@@ -24,7 +24,7 @@ export const DebugButton = styled.div`
   display: block;
   box-shadow: 0px 1px 3px 0px rgba(255, 255, 255, 0.5);
   text-transform: uppercase;
-  z-index: 3;
+  z-index: 4;
 
   &:hover {
     cursor: pointer;
@@ -46,7 +46,7 @@ export const AudioButton = styled.div`
   display: block;
   box-shadow: 0px 1px 3px 0px rgba(255, 255, 255, 0.5);
   text-transform: uppercase;
-  z-index: 3;
+  z-index: 4;
 
   &:hover {
     cursor: pointer;

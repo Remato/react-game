@@ -44,5 +44,5 @@ export const Wrapper = styled.div<Props>`
   color: ${(props) => getColor(props)};
   opacity: 0.8;
 
-  z-index: 2;
+  z-index: 3;
 `;

@@ -40,4 +40,5 @@ export const Animation = styled.div<AnimationProps>`
   animation: ${walking} 1s steps(4) infinite;
   background-image: ${({ animationPath }) => animationPath};
   transform: scaleX(${(props) => getDirection(props)});
+  z-index: 2;
 `;

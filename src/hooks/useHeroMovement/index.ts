@@ -25,14 +25,14 @@ function useHeroMovement(initialPosition: Position) {
     if (validations.door && doorsOpened) {
       setTimeout(() => {
         alert("YOU WIN!");
-      });
+      }, 100);
       window.location.reload();
     }
 
     if (validations.dead) {
       setTimeout(() => {
         alert("YOU DIED!");
-      });
+      }, 100);
       window.location.reload();
     }
 
