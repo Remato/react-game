@@ -7,13 +7,12 @@ declare type ValidPosition = {
 
 declare type UpdatedPosition = {
   nextPosition: Position;
-  validations: {
-    valid: boolean;
-    dead: boolean;
-  };
+  validations: ValidPosition;
 };
 
 declare interface CanvaStore {
+  doorsOpened: boolean;
+  openedChests: number;
   canvasStage: number[][];
   canvasDebugger: number[][];
   getDebuggerMap(): JSX.Element[];
@@ -23,5 +22,13 @@ declare interface CanvaStore {
     direction: string,
     walker: string
   ): UpdatedPosition;
-  isValidPosition(nextPosition: Position, walker: string): ValidPosition;
+}
+
+declare interface GameStore {
+  steps: number;
+  playMusic: boolean;
+  debbugerMode: boolean;
+  increaseSteps(): void;
+  handlePlayMusic(): void;
+  handleDebuggerMode(): void;
 }

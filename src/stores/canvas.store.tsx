@@ -1,10 +1,15 @@
 import { create } from "zustand";
 
 import { Chest, Demon, MiniDemon, Player, Tile, Trap } from "../components";
-import { handleNextMove } from "../contexts/canvas/helpers";
-import { TILE_TYPE, WALKER } from "../utils/enums";
+import { handleNextMove, isValidPosition } from "../contexts/canvas/helpers";
+import { TILE_TYPE } from "../utils/enums";
 
 const useCanvas = create<CanvaStore>((set, get) => ({
+  doorsOpened: false,
+
+  // 2 chests by map
+  openedChests: 0,
+
   canvasStage: [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1],
@@ -15,7 +20,7 @@ const useCanvas = create<CanvaStore>((set, get) => ({
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 1],
     [1, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -27,6 +32,7 @@ const useCanvas = create<CanvaStore>((set, get) => ({
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   ],
+
   canvasDebugger: [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1],
@@ -37,7 +43,7 @@ const useCanvas = create<CanvaStore>((set, get) => ({
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 1],
     [1, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -96,6 +102,11 @@ const useCanvas = create<CanvaStore>((set, get) => ({
           case TILE_TYPE.CHEST:
             boardTiles.push(<Chest key={key} initialPosition={position} />);
             break;
+          case TILE_TYPE.OPENED_CHEST:
+            boardTiles.push(
+              <Chest isOpen key={key} initialPosition={position} />
+            );
+            break;
 
           default:
             break;
@@ -107,7 +118,11 @@ const useCanvas = create<CanvaStore>((set, get) => ({
 
   updateBoardMap: (position, direction, walker) => {
     const nextPosition = handleNextMove(position, direction);
-    const { valid, ...rest } = get().isValidPosition(nextPosition, walker);
+    const { valid, chest, door, dead } = isValidPosition(
+      get().canvasDebugger,
+      nextPosition,
+      walker
+    );
 
     if (valid) {
       const bufferCanvas = get().canvasDebugger;
@@ -119,29 +134,29 @@ const useCanvas = create<CanvaStore>((set, get) => ({
       set(() => ({ canvasDebugger: bufferCanvas }));
     }
 
-    return { nextPosition, validations: { valid, ...rest } };
-  },
+    if (chest) {
+      const bufferCanvasStage = get().canvasStage;
+      const bufferCanvasDebbuger = get().canvasDebugger;
 
-  isValidPosition: (nextPosition, walker) => {
-    const { x, y } = nextPosition;
-    const tileType = get().canvasDebugger[y][x];
+      const currentTile = bufferCanvasDebbuger[position.y][position.x];
+      bufferCanvasDebbuger[position.y][position.x] = TILE_TYPE.FLOOR;
+      bufferCanvasDebbuger[nextPosition.y][nextPosition.x] = currentTile;
 
-    return walker === WALKER.PLAYER
-      ? {
-          valid: tileType !== TILE_TYPE.WALL,
-          dead:
-            tileType === TILE_TYPE.TRAP ||
-            tileType === TILE_TYPE.MINI_DEMON ||
-            tileType === TILE_TYPE.DEMON,
-          chest: tileType === TILE_TYPE.CHEST,
-          door: tileType === TILE_TYPE.DOOR,
-        }
-      : {
-          valid: tileType === TILE_TYPE.FLOOR || tileType === TILE_TYPE.PLAYER,
-          dead: false,
-          chest: false,
-          door: false,
-        };
+      bufferCanvasStage[position.y][position.x] = TILE_TYPE.FLOOR;
+      bufferCanvasStage[nextPosition.y][nextPosition.x] =
+        TILE_TYPE.OPENED_CHEST;
+
+      const openDoor = get().openedChests === 1 && chest;
+
+      set((prevState) => ({
+        canvasDebugger: bufferCanvasDebbuger,
+        canvasStage: bufferCanvasStage,
+        openedChests: prevState.openedChests + 1,
+        doorsOpened: openDoor,
+      }));
+    }
+
+    return { nextPosition, validations: { valid, chest, door, dead } };
   },
 }));
 

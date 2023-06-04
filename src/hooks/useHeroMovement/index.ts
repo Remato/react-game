@@ -2,12 +2,14 @@ import useEventListener from "@use-it/event-listener";
 import { useState } from "react";
 
 import useCanvas from "../../stores/canvas.store";
+import useGame from "../../stores/game.store";
 import { DIRECTION, WALKER } from "../../utils/enums";
 
 function useHeroMovement(initialPosition: Position) {
   const [position, setPosition] = useState<Position>(initialPosition);
   const [direction, setDirection] = useState(DIRECTION.RIGHT);
-  const { updateBoardMap } = useCanvas();
+  const { doorsOpened, updateBoardMap } = useCanvas();
+  const { increaseSteps } = useGame();
 
   useEventListener("keydown", (event: KeyboardEvent) => {
     const key = event.key as DIRECTION;
@@ -20,11 +22,22 @@ function useHeroMovement(initialPosition: Position) {
       WALKER.PLAYER
     );
 
+    if (validations.door && doorsOpened) {
+      setTimeout(() => {
+        alert("YOU WIN!");
+      });
+      window.location.reload();
+    }
+
     if (validations.dead) {
-      console.log("YOU DIED");
+      setTimeout(() => {
+        alert("YOU DIED!");
+      });
+      window.location.reload();
     }
 
     if (validations.valid) {
+      increaseSteps();
       setDirection(key);
       setPosition(nextPosition);
     }

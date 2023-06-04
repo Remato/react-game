@@ -1,8 +1,9 @@
-import styled, { keyframes } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 
 import { SIZES } from "../../utils/enums";
 
 type AnimationProps = {
+  isOpen: boolean;
   animationPath: string;
   positionX: number;
   positionY: number;
@@ -27,6 +28,11 @@ export const Animation = styled.div<AnimationProps>`
   width: ${SIZES.CHEST}px;
 
   background-repeat: no-repeat;
-  animation: ${chestOpening} 1s steps(3) infinite;
+  animation: ${({ isOpen }) =>
+    isOpen
+      ? css`
+          ${chestOpening} 1s steps(3) infinite
+        `
+      : null};
   background-image: ${({ animationPath }) => animationPath};
 `;

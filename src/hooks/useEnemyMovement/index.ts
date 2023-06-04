@@ -20,11 +20,18 @@ function useEnemyMovement(initialPosition: Position) {
       WALKER.ENEMY
     );
 
+    if (validations.dead) {
+      setTimeout(() => {
+        alert("YOU DIED BY ENEMY!");
+      });
+      window.location.reload();
+    }
+
     if (validations.valid) {
       setDirection(randomDirection);
       setPosition(nextPosition);
     }
-  }, 1000);
+  }, 1500);
 
   return {
     position,

@@ -6,3 +6,4 @@ export { default as Chest } from "./Chest";
 export { default as Trap } from "./Trap";
 export { default as Debugger } from "./Debugger";
 export { default as Tile } from "./Tile";
+export { default as Header } from "./Header";

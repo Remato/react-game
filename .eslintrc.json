@@ -39,6 +39,7 @@
     ],
     "class-methods-use-this": "off",
     "import/prefer-default-export": "off",
+    "react/require-default-props": "off",
     "no-shadow": "off",
     "no-console": "off",
     "no-useless-constructor": "off",

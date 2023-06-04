@@ -7,6 +7,7 @@ export enum TILE_TYPE {
   DEMON = 5,
   CHEST = 6,
   PLAYER = 7,
+  OPENED_CHEST = 8,
 }
 
 export enum WALKER {
